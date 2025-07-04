@@ -3,86 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>聚焦任务系统 Pro v2</title>
+    <title>聚焦任务系统 Pro v3 (已保存)</title>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     
     <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background-color: #f0f2f5;
-            color: #333;
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
-        .container {
-            width: 100%;
-            max-width: 600px;
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-        }
+        /* CSS样式与之前版本相同，此处为简洁省略，实际使用时请保留之前的CSS代码 */
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #f0f2f5; color: #333; margin: 0; padding: 20px; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .container { width: 100%; max-width: 600px; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.1); }
         h1, h2 { text-align: center; color: #111; }
-
-        /* --- 设置屏幕样式 --- */
         #setup-screen .input-group { display: flex; margin-bottom: 20px; }
         #setup-screen input { flex-grow: 1; padding: 12px; border: 1px solid #ddd; border-radius: 8px 0 0 8px; font-size: 16px; }
         #setup-screen #add-task-btn { padding: 12px 20px; border: none; background: #007bff; color: white; font-size: 16px; border-radius: 0 8px 8px 0; cursor: pointer; }
-
         #task-list { list-style: none; padding: 0; }
-        #task-list li {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px;
-            margin-bottom: 10px;
-            background: #f8f9fa;
-            border: 1px solid #eee;
-            border-radius: 8px;
-            cursor: move;
-            font-size: 18px;
-        }
-        #task-list li .delete-btn {
-            background: transparent; border: none; color: #dc3545; font-size: 20px; cursor: pointer; display: none;
-        }
+        #task-list li { display: flex; justify-content: space-between; align-items: center; padding: 15px; margin-bottom: 10px; background: #f8f9fa; border: 1px solid #eee; border-radius: 8px; cursor: move; font-size: 18px; }
+        #task-list li .delete-btn { background: transparent; border: none; color: #dc3545; font-size: 20px; cursor: pointer; display: none; }
         #task-list li:hover .delete-btn { display: block; }
-        
         .start-btn { display: block; width: 100%; padding: 15px; font-size: 18px; background: #28a745; color: white; border-radius: 8px; border: none; cursor: pointer; margin-top: 20px;}
         .start-btn:disabled { background: #aaa; }
-
-        /* --- 任务屏幕样式 --- */
         #task-screen { display: none; text-align: center; }
-        #current-task-text {
-            font-size: 28px;
-            font-weight: 500;
-            padding: 20px;
-            margin: 20px 0;
-            border: 2px dashed #ddd;
-            border-radius: 8px;
-            min-height: 50px;
-        }
+        #current-task-text { font-size: 28px; font-weight: 500; padding: 20px; margin: 20px 0; border: 2px dashed #ddd; border-radius: 8px; min-height: 50px; }
         #current-task-text:focus { background: #f0f8ff; outline: none; border-color: #007bff; }
         .timer-group { margin: 30px 0; }
         .timer-group input { width: 60px; text-align: center; font-size: 16px; padding: 8px; border-radius: 8px; border: 1px solid #ddd; margin: 0 10px;}
         .timer-group button { padding: 8px 16px; font-size: 16px; border-radius: 8px; border: none; cursor: pointer; }
         #timer-display { font-size: 48px; font-weight: bold; color: #007bff; margin: 20px 0; }
-
         #complete-btn { display: block; width: 100%; padding: 15px; font-size: 18px; background: #007bff; color: white; border-radius: 8px; border: none; cursor: pointer; margin-top: 20px;}
-        
-        /* 【新增】次要按钮样式 */
-        .secondary-btn {
-            display: block; width: 100%; padding: 10px; font-size: 16px; background: #6c757d;
-            color: white; border-radius: 8px; border: none; cursor: pointer; margin-top: 10px;
-        }
-
-        #final-message { display: none; font-size: 28px; font-weight: bold; color: #28a745; text-align: center; }
-
-        /* 特效 Canvas */
+        .secondary-btn { display: block; width: 100%; padding: 10px; font-size: 16px; background: #6c757d; color: white; border-radius: 8px; border: none; cursor: pointer; margin-top: 10px; }
+        #final-message { display: none; text-align: center; }
+        #final-message p { font-size: 28px; font-weight: bold; color: #28a745; }
         #confetti-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; }
     </style>
 </head>
@@ -97,7 +46,6 @@
             <ul id="task-list"></ul>
             <button id="start-tasks-btn" class="start-btn" disabled>开始任务</button>
         </div>
-
         <div id="task-screen">
             <h2>当前任务</h2>
             <div id="current-task-text" contenteditable="true" title="点击以编辑"></div>
@@ -110,13 +58,11 @@
             <button id="complete-btn" class="complete-btn">完成任务</button>
             <button id="back-to-list-btn" class="secondary-btn">返回列表修改</button>
         </div>
-        
         <div id="final-message">
             <p>🎉 恭喜！所有任务都已完成！</p>
             <button id="restart-btn" class="start-btn">创建新列表</button>
         </div>
     </div>
-    
     <canvas id="confetti-canvas"></canvas>
 
     <script>
@@ -127,47 +73,93 @@
             let timerInterval = null;
 
             // --- 获取元素 ---
+            // (此部分与上一版相同，保持不变)
             const setupScreen = document.getElementById('setup-screen');
             const taskScreen = document.getElementById('task-screen');
             const finalMessage = document.getElementById('final-message');
-            
             const newTaskInput = document.getElementById('new-task-input');
             const addTaskBtn = document.getElementById('add-task-btn');
             const taskList = document.getElementById('task-list');
             const startTasksBtn = document.getElementById('start-tasks-btn');
-
             const currentTaskText = document.getElementById('current-task-text');
             const timerInput = document.getElementById('timer-input');
             const startTimerBtn = document.getElementById('start-timer-btn');
             const timerDisplay = document.getElementById('timer-display');
             const completeBtn = document.getElementById('complete-btn');
-
-            // 【新增】获取新按钮的元素
             const backToListBtn = document.getElementById('back-to-list-btn');
             const restartBtn = document.getElementById('restart-btn');
             
             // --- 初始化 Confetti 特效 ---
-            const myConfetti = confetti.create(document.getElementById('confetti-canvas'), {
-                resize: true,
-                useWorker: true
-            });
+            const myConfetti = confetti.create(document.getElementById('confetti-canvas'), { resize: true, useWorker: true });
+
+            // --- 【新增】LocalStorage 核心功能 ---
+            const STORAGE_KEY = 'focusTaskAppState';
+
+            function saveState(view = 'setup') {
+                const state = {
+                    tasks: Array.from(taskList.children).map(li => li.childNodes[0].textContent.trim()),
+                    currentTaskIndex: currentTaskIndex,
+                    currentView: view
+                };
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+            }
+
+            function loadState() {
+                const savedState = localStorage.getItem(STORAGE_KEY);
+                if (!savedState) return;
+
+                const state = JSON.parse(savedState);
+                
+                // 恢复任务列表到DOM
+                taskList.innerHTML = ''; // 清空现有列表
+                state.tasks.forEach(taskText => {
+                    createTaskLi(taskText); // 使用一个新函数来创建LI元素
+                });
+
+                tasks = state.tasks;
+                currentTaskIndex = state.currentTaskIndex;
+                updateStartButtonState();
+                
+                // 恢复视图
+                if (state.currentView === 'task' && tasks.length > 0 && currentTaskIndex < tasks.length) {
+                    setupScreen.style.display = 'none';
+                    taskScreen.style.display = 'block';
+                    displayCurrentTask();
+                }
+            }
+
+            function clearState() {
+                localStorage.removeItem(STORAGE_KEY);
+            }
 
             // --- 任务设置屏幕逻辑 ---
-            function addTask() {
-                const taskText = newTaskInput.value.trim();
-                if (taskText === '') return;
+            
+            // 【修改】将创建LI的逻辑提取为独立函数，方便恢复状态时调用
+            function createTaskLi(taskText) {
                 const li = document.createElement('li');
                 li.textContent = taskText;
                 const deleteBtn = document.createElement('button');
                 deleteBtn.textContent = '×';
                 deleteBtn.className = 'delete-btn';
-                deleteBtn.onclick = () => { li.remove(); updateStartButtonState(); };
+                deleteBtn.onclick = () => { 
+                    li.remove(); 
+                    updateStartButtonState();
+                    saveState('setup'); // 【保存】删除后保存状态
+                };
                 li.appendChild(deleteBtn);
                 taskList.appendChild(li);
+            }
+
+            function addTask() {
+                const taskText = newTaskInput.value.trim();
+                if (taskText === '') return;
+                createTaskLi(taskText);
                 newTaskInput.value = '';
                 newTaskInput.focus();
                 updateStartButtonState();
+                saveState('setup'); // 【保存】添加后保存状态
             }
+            
             addTaskBtn.addEventListener('click', addTask);
             newTaskInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') addTask(); });
 
@@ -175,15 +167,23 @@
                 startTasksBtn.disabled = taskList.children.length === 0;
             }
 
-            new Sortable(taskList, { animation: 150, ghostClass: 'blue-background-class' });
+            // 【修改】初始化拖拽排序，并在结束时保存状态
+            new Sortable(taskList, {
+                animation: 150,
+                ghostClass: 'blue-background-class',
+                onEnd: () => {
+                    saveState('setup'); // 【保存】拖拽结束后保存状态
+                }
+            });
 
             startTasksBtn.addEventListener('click', () => {
                 tasks = Array.from(taskList.children).map(li => li.childNodes[0].textContent.trim());
                 if (tasks.length > 0) {
-                    currentTaskIndex = 0; // 【修改】确保每次开始都是从第一个任务开始
+                    currentTaskIndex = 0;
                     setupScreen.style.display = 'none';
                     taskScreen.style.display = 'block';
                     displayCurrentTask();
+                    saveState('task'); // 【保存】开始任务时保存状态
                 }
             });
 
@@ -196,15 +196,21 @@
                 } else {
                     taskScreen.style.display = 'none';
                     finalMessage.style.display = 'block';
+                    clearState(); // 【清除】所有任务完成后清除状态
                 }
             }
             
             currentTaskText.addEventListener('blur', () => {
-                if(tasks[currentTaskIndex]) { // 确保任务存在
+                if (tasks[currentTaskIndex] && tasks[currentTaskIndex] !== currentTaskText.textContent) {
                     tasks[currentTaskIndex] = currentTaskText.textContent;
+                     // 更新DOM中的li文本，以便返回时能看到修改
+                    taskList.children[currentTaskIndex].childNodes[0].textContent = currentTaskText.textContent;
+                    saveState('task'); // 【保存】编辑任务后保存状态
                 }
             });
 
+            startTimerBtn.addEventListener('click', () => { /* ... 此处逻辑不变 ... */ });
+            // (定时器逻辑与上一版相同，保持不变)
             startTimerBtn.addEventListener('click', () => {
                 const minutes = parseInt(timerInput.value, 10);
                 if (isNaN(minutes) || minutes <= 0) return;
@@ -229,37 +235,35 @@
                 setTimeout(() => {
                     currentTaskIndex++;
                     displayCurrentTask();
+                    if(currentTaskIndex < tasks.length) {
+                       saveState('task'); // 【保存】完成一个任务后保存新状态
+                    }
                 }, 1500);
             });
 
-            // --- 【新增】返回和重置逻辑 ---
-            
-            // 9. 从任务界面返回列表界面 (不清除列表)
+            // --- 返回和重置逻辑 ---
             function goBackToList() {
-                clearInterval(timerInterval); // 停止计时器
+                clearInterval(timerInterval);
                 taskScreen.style.display = 'none';
                 setupScreen.style.display = 'block';
+                saveState('setup'); // 【保存】返回列表时保存状态
             }
             
-            // 10. 从最终界面重新开始 (清除列表)
             function restart() {
-                // 清空DOM和内部数组
                 taskList.innerHTML = ''; 
                 tasks = [];
                 currentTaskIndex = 0;
-                
-                // 切换视图
                 finalMessage.style.display = 'none';
                 setupScreen.style.display = 'block';
-
-                // 更新按钮状态
                 updateStartButtonState();
+                clearState(); // 【清除】点击重新开始时清除状态
             }
 
-            // 【新增】为新按钮绑定事件
             backToListBtn.addEventListener('click', goBackToList);
             restartBtn.addEventListener('click', restart);
 
+            // --- 【启动】页面加载时，自动加载上次的状态 ---
+            loadState();
         });
     </script>
 </body>
